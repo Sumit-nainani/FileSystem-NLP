@@ -3,7 +3,7 @@ import re
 import json,os
 import google.generativeai as genai
 from dotenv import load_dotenv
-from FileSystem import makeFileSysytem
+from FileSystem import makeFileSystem
 
 load_dotenv()
 
@@ -17,13 +17,13 @@ def get_file_params(query: str) -> str:
         model = get_model()
         prompt =  f"""
                     Extract the following information from the user's file search query:
-                    - created_at in DD/MM/YYYY format or empty if none.
+                    - created_at in DD/MM/YYYY formats or empty if none.There can be many dates in a single query.
                     - file extensions as list based on keywords like 'excel'-> ['xlsx'], 'java file'-> ['java'], 'text file'-> ['txt'], etc.
                     - other keywords as a list (e.g., financial, User)
                     Return ONLY a JSON object with keys 'created_at', 'file extensions', and 'other_keywords'.
                     Example:
                     Input: give me my financial excel file which i created in 15/07/2023
-                    Output: {{"created_at": "15/07/2023", "file extensions": ["xlsx"], "other_keywords": ["financial"]}}
+                    Output: {{"created_at": ["15/07/2023"], "file extensions": ["xlsx"], "other_keywords": ["financial"]}}
                     Now process this input:
                     {query}
                    """
@@ -39,7 +39,7 @@ def get_file_params(query: str) -> str:
 
 if __name__ == "__main__":
 
-    root = makeFileSysytem()
+    root = makeFileSystem()
 
     while True:
         user_query = input("Enter your file search queries (type 'exit' or 'quit' to stop) : ").strip()
