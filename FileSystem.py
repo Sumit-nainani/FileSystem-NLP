@@ -41,7 +41,8 @@ class FileClass(FileSystem):
         self.file_creation_date = file_creation_date
 
     def ls(self, file_extensions: List[str], file_creation_date: Optional[str], keywords: List[str], path: str = "") -> List[str]:
-        # Check file extension match
+
+        # Checking file extension match
         file_extension_match = False
         if file_extensions:
             for extension in file_extensions:
@@ -50,24 +51,24 @@ class FileClass(FileSystem):
                     break
         else:
             file_extension_match = True
-        # Check creation date match: if created_at is None, accept all
+
+        # Checking creation date match , if created_at is None , accepting all
         file_creation_date_match = True
         if file_creation_date:
             file_creation_date_match = (self.file_creation_date == file_creation_date)
 
-        # Check keywords match in file name
+        # Checking keywords match in file name
         keyword_match = True
         if keywords:
-            # All keywords must appear in filename ignoring case
             lower_name = self.file_name.lower()
-            keyword_match = all(kw.lower() in lower_name for kw in keywords)
+            keyword_match = any(kw.lower() in lower_name for kw in keywords)
 
         if file_extension_match and file_creation_date_match and keyword_match:
             return [path + self.file_name]
         else:
             return []
    
-if __name__ == "__main__":
+def makeFileSysytem() -> DirectoryClass:
     # Create some files
     f1 = FileClass("User.java", "15/07/2023")
     f2 = FileClass("FinanceReport.xlsx", "10/06/2023")
@@ -87,12 +88,4 @@ if __name__ == "__main__":
     root.add(src)
     root.add(docs)
 
-    start_dir_path = "root/docs"
-
-    start_dir = root.find_dir(start_dir_path)
-
-    print("List all files:")
-    matched = start_dir.ls(["java","txt"],[],[])
-
-    for file_path in matched:
-        print(file_path)
+    return root
